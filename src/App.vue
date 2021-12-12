@@ -1,6 +1,7 @@
 <template>
   <div v-if="!loading"
        style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <span v-if="isLoggedIn" @click="logout" class="mdi mdi-logout-variant btn btn-logout"></span>
     <p style="font-weight: 800; font-size: 1.5rem; margin-bottom: 2rem;">동래고등학교 등교 시스템</p>
     <Login v-if="!isLoggedIn"/>
     <div v-else class="container">
@@ -14,7 +15,7 @@
           <p style="font-weight: 600;">{{ name }}</p>
         </div>
       </div>
-      <img alt="QR Code" ref="qr" class="qr"/>
+      <img alt="QR 코드를 로딩 중입니다..." ref="qr" class="qr"/>
       <div class="btn">
         출석 기록 보기
       </div>
@@ -24,7 +25,8 @@
 
 <style>
 @import url("https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css");
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css");
 
 * {
   font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif !important;
@@ -86,6 +88,22 @@ input:focus {
   width: 100%;
 
   border: 1px solid rgba(0, 0, 0, .3);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.btn-logout {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+
+  color: black;
+
+  border: none;
+  padding: 1rem;
 }
 </style>
 
@@ -113,14 +131,23 @@ export default {
       setTimeout(() => {
         window.addEventListener("resize", () => {
           this.$refs.qr.style.height = `${this.$refs.qr.clientWidth}px`;
+          this.$refs.qr.style.lineHeight = `${this.$refs.qr.clientWidth}px`;
         }, true);
         this.$refs.qr.style.height = `${this.$refs.qr.clientWidth}px`;
+        this.$refs.qr.style.lineHeight = `${this.$refs.qr.clientWidth}px`;
 
         this.refresh();
-      }, 1);
+      }, 0);
     }
   },
   methods: {
+    logout() {
+      if (confirm("로그아웃 하시겠습니까?")) {
+        localStorage.clear();
+        alert("로그아웃하였습니다.");
+        location.reload();
+      }
+    },
     async refresh() {
       let jwt = (await axios.post("https://dnhs-contest.nlog.dev/api/student/qr", JSON.stringify({
         num: this.num,

@@ -16,6 +16,8 @@ export default createStore({
 			});
 			if (ret.data.result !== 0) {
 				alert("학번 또는 이름을 다시 확인하세요.");
+				localStorage.clear();
+				location.reload();
 				return;
 			}
 
