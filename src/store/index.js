@@ -6,6 +6,7 @@ export default createStore({
 		isLoggedIn: false,
 		num: "",
 		name: "",
+		log: [],
 	}, mutations: {
 		async login(state, {num, name}) {
 			if (state.isLoggedIn) return;
@@ -27,6 +28,12 @@ export default createStore({
 			state.isLoggedIn = true;
 			state.num = num;
 			state.name = name;
+
+			axios.post("https://dnhs-contest.nlog.dev/api/student/log", JSON.stringify({num, name}), {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}).then(ret => state.log = ret.data.result_data.reverse().slice(0, 5).map(t => new Date(t)));
 		}
 	},
 	actions: {},
@@ -39,6 +46,9 @@ export default createStore({
 		},
 		name(state) {
 			return state.name;
+		},
+		log(state) {
+			return state.log;
 		},
 	},
 	modules: {}

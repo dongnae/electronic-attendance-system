@@ -16,10 +16,11 @@
         </div>
       </div>
       <img alt="QR 코드를 로딩 중입니다..." ref="qr" class="qr"/>
-      <div class="btn">
+      <div class="btn" @click="popup = true;">
         출석 기록 보기
       </div>
     </div>
+    <ViewLog v-if="popup" @click.stop="popup = false;" @close="popup = false"/>
   </div>
 </template>
 
@@ -111,9 +112,10 @@ input:focus {
 import Login from "./components/Login";
 import axios from "axios";
 import QrCodeWithLogo from "qrcode-with-logos";
+import ViewLog from "@/components/ViewLog";
 
 export default {
-  components: {Login},
+  components: {ViewLog, Login},
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
@@ -179,6 +181,7 @@ export default {
   data() {
     return {
       loading: true,
+      popup: false,
     };
   },
   created() {
