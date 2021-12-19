@@ -144,7 +144,7 @@ export default {
   },
   methods: {
     logout() {
-      if (confirm("로그아웃 하시겠습니까?")) {
+      if (confirm("로그아웃하시겠습니까?")) {
         localStorage.clear();
         alert("로그아웃하였습니다.");
         location.reload();
